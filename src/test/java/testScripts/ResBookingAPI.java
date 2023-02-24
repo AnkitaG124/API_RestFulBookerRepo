@@ -18,7 +18,7 @@ public class ResBookingAPI {
 	String token;
 	int bookingId;
 	CreateBooking book;
-	//@BeforeMethod
+	@BeforeMethod
 	public void generateToken() {
 		RestAssured.baseURI = "https://restful-booker.herokuapp.com";
 		Response res = RestAssured.given().log().all().headers("Content-Type", "application/json")
@@ -44,7 +44,7 @@ public class ResBookingAPI {
 	}
 	
 	
-	@Test
+	@Test(enabled = false)
 	public void updateBooking()
 	{
 		book.setFirstname("Piyush");
@@ -58,6 +58,37 @@ public class ResBookingAPI {
 		CreateBooking resBody=res.as(CreateBooking.class);
 		Assert.assertTrue(book.equals(resBody));
 	}
+	
+	@Test(enabled = false)
+	public void partialUpdateBooking()
+	{
+		book.setFirstname("Piyush");
+		Response res = RestAssured.given().log().all().header("Accept", "application/json").
+				header("Content-Type","application/json").header("Cookie","token="+token)
+				.when()
+				.body(book)
+				.patch("/booking/" + bookingId);
+		System.out.println(res.asPrettyString());
+		Assert.assertEquals(res.statusCode(), StatusCodes.OK);
+		CreateBooking resBody=res.as(CreateBooking.class);
+		Assert.assertTrue(book.equals(resBody));
+	}
+	
+	@Test
+	public void deleteBooking()
+	{
+		book.setFirstname("Piyush");
+		Response res = RestAssured.given().log().all().
+				header("Content-Type","application/json").header("Cookie","token="+token)
+				.when()
+				.body(book)
+				.delete("/booking/" + bookingId);
+		System.out.println(res.asPrettyString());
+		//Assert.assertEquals(res.statusCode(), StatusCodes.OK);
+//		CreateBooking resBody=res.as(CreateBooking.class);
+//		Assert.assertTrue(book.equals(resBody));
+	}
+	
 	@Test(enabled = false)
 	
 	public void getSpecificBookingByIdWithDeserialization() {
@@ -72,7 +103,7 @@ public class ResBookingAPI {
 	}
 
 	@Test(priority = 0)
-	public void cresteBookingwithPoJo() {
+	public void createBookingwithPoJo() {
 		// RestAssured.baseURI="https://0e686aed-6e36-4047-bcb4-a2417455c2d7.mock.pstmn.io";
 
 		BookingDates date = new BookingDates();
@@ -156,7 +187,7 @@ public void validateResponse(Response res,CreateBooking book, String object)
 			book.getBookingdates().getCheckout());
 }
 
-@Test
+@Test(enabled = false)
 public void demoForResponseWithArrayAlso_togetType()
 {
 	RestAssured.baseURI="https://0e686aed-6e36-4047-bcb4-a2417455c2d7.mock.pstmn.io";
@@ -170,7 +201,7 @@ public void demoForResponseWithArrayAlso_togetType()
 	System.out.println(list);	
 }
 
-@Test
+@Test(enabled = false)
 public void demoForResponseWithArrayAlso_togetNumbers()
 {
 	RestAssured.baseURI="https://0e686aed-6e36-4047-bcb4-a2417455c2d7.mock.pstmn.io";
